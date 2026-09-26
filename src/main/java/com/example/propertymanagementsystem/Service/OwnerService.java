@@ -1,0 +1,67 @@
+package com.example.propertymanagementsystem.Service;
+
+import com.example.propertymanagementsystem.Model.Owner;
+import com.example.propertymanagementsystem.Repository.OwnerRepository;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class OwnerService {
+
+    private final OwnerRepository ownerRepository;
+
+    // Get All Owners
+    public List<Owner> getAllOwners() {
+
+        return ownerRepository.findAll();
+    }
+
+    // Get Owner By ID
+    public Owner getOwnerById(Long ownerId) {
+        return ownerRepository.findById(ownerId).orElse(null);
+    }
+
+    // Add Owner
+    public Owner addOwner(Owner owner) {
+        return ownerRepository.save(owner);
+    }
+
+    // Update Owner
+
+    public Owner updateOwner(Long ownerId, Owner owner) {
+
+        Owner oldOwner = ownerRepository.findById(ownerId).orElse(null);
+
+        if (oldOwner == null) {
+            return null;
+        }
+
+        oldOwner.setOfficeId(owner.getOfficeId());
+        oldOwner.setName(owner.getName());
+        oldOwner.setOwnerType(owner.getOwnerType());
+        oldOwner.setIdentificationNumber(owner.getIdentificationNumber());
+        oldOwner.setPhone(owner.getPhone());
+        oldOwner.setEmail(owner.getEmail());
+        oldOwner.setAddress(owner.getAddress());
+
+        return ownerRepository.save(oldOwner);
+    }
+
+    // Delete Owner
+    public boolean deleteOwner(Long ownerId) {
+
+        Owner oldOwner = ownerRepository.findById(ownerId).orElse(null);
+
+        if (oldOwner == null) {
+            return false;
+        }
+
+        ownerRepository.delete(oldOwner);
+        return true;
+    }
+}
