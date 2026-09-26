@@ -64,4 +64,22 @@ public class OwnerService {
         ownerRepository.delete(oldOwner);
         return true;
     }
+
+    // check Identification Number  for Owner
+    public boolean checkIdentificationNumber(String identificationNumber) {
+
+        List<Owner> owners =
+                ownerRepository.findAll();
+
+        for (int i = 0; i < owners.size(); i++) {
+
+            if (owners.get(i).getIdentificationNumber()
+                    .equals(identificationNumber)) {
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
