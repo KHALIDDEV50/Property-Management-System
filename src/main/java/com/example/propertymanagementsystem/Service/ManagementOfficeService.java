@@ -63,4 +63,16 @@ public class ManagementOfficeService {
         managementOfficeRepository.delete(oldOffice);
         return true;
     }
+
+
+    // check Commercial Registration
+
+    public boolean checkCommercialRegistration(String commercialRegistration) {
+        List<ManagementOffice> offices = managementOfficeRepository.findAll();
+        for (int i = 0; i < offices.size(); i++) {
+            if (offices.get(i).getCommercialRegistration().equals(commercialRegistration)) ;
+            return true;
+        }
+        return false;
+    }
 }
