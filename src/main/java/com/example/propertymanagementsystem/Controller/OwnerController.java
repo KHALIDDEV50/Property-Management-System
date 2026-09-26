@@ -1,0 +1,105 @@
+package com.example.propertymanagementsystem.Controller;
+
+import com.example.propertymanagementsystem.APIResponse.ApiResponse;
+import com.example.propertymanagementsystem.Model.Owner;
+import com.example.propertymanagementsystem.Service.OwnerService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/owner")
+@RequiredArgsConstructor
+public class OwnerController {
+
+    private final OwnerService ownerService;
+
+
+    // Get All Owners
+    @GetMapping("/get")
+    public ResponseEntity<?> getAllOwners() {
+
+        return ResponseEntity.status(200).body(ownerService.getAllOwners());
+    }
+
+    // Get Owner By ID
+    @GetMapping("/get/{ownerId}")
+    public ResponseEntity<?> getOwnerById(@PathVariable Long ownerId) {
+
+        Owner owner = ownerService.getOwnerById(ownerId);
+
+        if (owner == null) {
+            return ResponseEntity.status(404).body(new ApiResponse("Owner not found"));
+        }
+
+        return ResponseEntity.status(200).body(owner);
+    }
+
+
+    // Add Owner
+    @PostMapping("/add")
+    public ResponseEntity<?> addOwner(@RequestBody @Valid Owner owner, Errors errors) {
+
+        if (errors.hasFieldErrors()) {
+
+            String message = errors.getFieldError().getDefaultMessage();
+
+            return ResponseEntity.status(400).body(new ApiResponse(message));
+        }
+
+        boolean isExist = ownerService.checkIdentificationNumber(owner.getIdentificationNumber());
+
+        if (isExist) {
+
+            return ResponseEntity.status(400).body(new ApiResponse("Identification Number already exists"));
+        }
+
+        ownerService.addOwner(owner);
+
+        return ResponseEntity.status(200).body(new ApiResponse("Owner Add Successful"));
+    }
+
+
+    // Update Owner
+    @PutMapping("/update/{ownerId}")
+    public ResponseEntity<?> updateOwner(@PathVariable Long ownerId, @RequestBody @Valid Owner owner, Errors errors) {
+
+        if (errors.hasFieldErrors()) {
+
+            String message = errors.getFieldError().getDefaultMessage();
+
+            return ResponseEntity.status(400).body(new ApiResponse(message));
+        }
+
+        Owner oldOwner = ownerService.getOwnerById(ownerId);
+
+        if (oldOwner == null) {
+
+            return ResponseEntity.status(404).body(new ApiResponse("Owner not found"));
+        }
+
+        ownerService.updateOwner(ownerId, owner);
+
+        return ResponseEntity.status(200).body(new ApiResponse("Owner Update Successful"));
+    }
+
+
+    // Delete Owner
+    @DeleteMapping("/delete/{ownerId}")
+    public ResponseEntity<?> deleteOwner(
+            @PathVariable Long ownerId) {
+
+        Owner owner = ownerService.getOwnerById(ownerId);
+
+        if (owner == null) {
+
+            return ResponseEntity.status(404).body(new ApiResponse("Owner not found"));
+        }
+
+        ownerService.deleteOwner(ownerId);
+
+        return ResponseEntity.status(200).body(new ApiResponse("Owner Delete Successful"));
+    }
+}
