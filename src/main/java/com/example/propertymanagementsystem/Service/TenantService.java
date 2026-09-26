@@ -63,4 +63,21 @@ public class TenantService {
         tenantRepository.delete(oldTenant);
         return true;
     }
+
+    //  check Identification Number for Tenant
+    public boolean checkIdentificationNumber(String identificationNumber) {
+
+        List<Tenant> tenants = tenantRepository.findAll();
+
+        for (int i = 0; i < tenants.size(); i++) {
+
+            if (tenants.get(i).getIdentificationNumber()
+                    .equals(identificationNumber)) {
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
