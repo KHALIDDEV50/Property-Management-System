@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class ManagementOfficeService {
 
@@ -70,9 +69,20 @@ public class ManagementOfficeService {
     public boolean checkCommercialRegistration(String commercialRegistration) {
         List<ManagementOffice> offices = managementOfficeRepository.findAll();
         for (int i = 0; i < offices.size(); i++) {
-            if (offices.get(i).getCommercialRegistration().equals(commercialRegistration)) ;
-            return true;
+            if (offices.get(i).getCommercialRegistration().equals(commercialRegistration)) {
+                return true;
+            }
+
         }
         return false;
     }
+
+    // Search offices by city
+
+    public List<ManagementOffice> searchByCity(String city){
+
+        // Call the repository query
+        return managementOfficeRepository.findByCity(city);
+    }
+
 }

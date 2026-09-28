@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class UnitService {
 
@@ -64,6 +63,59 @@ public class UnitService {
         }
 
         unitRepository.delete(oldUnit);
+        return true;
+    }
+
+    // Search units by property ID
+    public List<Unit> searchByPropertyId(Long propertyId) {
+
+        // Call repository query
+        return unitRepository.findByPropertyId(propertyId);
+    }
+
+    // Search units by status
+    public List<Unit> searchByStatus(String status) {
+
+        // Call repository query
+        return unitRepository.findByStatus(status);
+    }
+
+    // Get all available units
+    public List<Unit> getAvailableUnits() {
+
+        // Call repository query
+        return unitRepository.getAvailableUnits();
+    }
+
+    // Get all occupied units
+    public List<Unit> getOccupiedUnits() {
+
+        // Call repository query
+        return unitRepository.getOccupiedUnits();
+    }
+
+    // Get available units by type
+    public List<Unit> getAvailableUnitsByType(String unitType) {
+
+        // Call repository query
+        return unitRepository.getAvailableUnitsByType(unitType);
+    }
+
+
+
+    // Change unit status
+    public boolean changeUnitStatus(Long unitId, String status) {
+
+        Unit unit = unitRepository.findById(unitId).orElse(null);
+
+        if (unit == null) {
+            return false;
+        }
+
+        unit.setStatus(status);
+
+        unitRepository.save(unit);
+
         return true;
     }
 }

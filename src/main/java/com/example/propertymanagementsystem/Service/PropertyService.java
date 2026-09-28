@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class PropertyService {
 
@@ -62,6 +61,39 @@ public class PropertyService {
         }
 
         propertyRepository.delete(oldProperty);
+        return true;
+    }
+
+    // Search properties by owner ID
+    public List<Property> searchByOwnerId(Long ownerId) {
+
+        // Call repository query
+        return propertyRepository.findByOwnerId(ownerId);
+    }
+
+    // Search properties by city
+    public List<Property> searchByCity(String city) {
+
+        // Call repository query
+        return propertyRepository.findByCity(city);
+    }
+
+    //..
+    // Transfer property ownership
+    public boolean transferPropertyOwnership(Long propertyId, Long newOwnerId) {
+
+        // Get property by ID
+        Property property = propertyRepository.findById(propertyId).orElse(null);
+
+        // Check if property exists
+        if (property == null) {
+            return false;
+        }
+        // Change property owner
+        property.setOwnerId(newOwnerId);
+        // Save updated property
+        propertyRepository.save(property);
+
         return true;
     }
 }

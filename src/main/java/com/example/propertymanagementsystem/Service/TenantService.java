@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class TenantService {
 
@@ -79,5 +78,19 @@ public class TenantService {
         }
 
         return false;
+    }
+
+    // Search tenants by city
+    public List<Tenant> searchByCity(String city) {
+
+        // Call repository query
+        return tenantRepository.findByCity(city);
+    }
+
+    // Search tenants by tenant type
+    public List<Tenant> searchByTenantType(String tenantType) {
+
+        // Call repository query
+        return tenantRepository.findByTenantType(tenantType);
     }
 }

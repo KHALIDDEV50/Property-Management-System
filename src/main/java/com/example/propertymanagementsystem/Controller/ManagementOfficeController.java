@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/office")
 @RequiredArgsConstructor
@@ -91,4 +93,14 @@ public class ManagementOfficeController {
         return ResponseEntity.status(200).body(new ApiResponse("Office Delete Successful"));
     }
 
+    // Extra..
+    // Search offices by city
+    @GetMapping("/search/{city}")
+    public ResponseEntity<?> searchByCity(@PathVariable String city){
+
+        // Get offices from service
+        List<ManagementOffice> offices = managementOfficeService.searchByCity(city);
+
+        return ResponseEntity.status(200).body(offices);
+    }
 }

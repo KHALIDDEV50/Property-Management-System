@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/property")
 @RequiredArgsConstructor
@@ -97,5 +99,42 @@ public class PropertyController {
         propertyService.deleteProperty(propertyId);
 
         return ResponseEntity.status(200).body(new ApiResponse("Property Delete Successful"));
+    }
+
+    // Search properties by owner ID
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<?> searchByOwnerId(@PathVariable Long ownerId) {
+
+        // Get properties from service
+        List<Property> properties = propertyService.searchByOwnerId(ownerId);
+
+        return ResponseEntity.status(200).body(properties);
+    }
+
+    // Search properties by city
+    @GetMapping("/city/{city}")
+    public ResponseEntity<?> searchByCity(@PathVariable String city) {
+
+        // Get properties from service
+        List<Property> properties = propertyService.searchByCity(city);
+
+        return ResponseEntity.status(200).body(properties);
+    }
+
+    //..
+    // Transfer property ownership
+    @PutMapping("/transfer-owner/{propertyId}/{newOwnerId}")
+    public ResponseEntity<?> transferPropertyOwnership(@PathVariable Long propertyId, @PathVariable Long newOwnerId) {
+
+        // Transfer property to new owner
+        boolean isTransferred = propertyService.transferPropertyOwnership(propertyId, newOwnerId);
+
+        // Check if property exists
+        if (!isTransferred) {
+            return ResponseEntity.status(404).body(new ApiResponse("Property not found"));
+        }
+
+        return ResponseEntity.status(200)
+                .body(new ApiResponse("Property ownership transferred successfully"));
     }
 }

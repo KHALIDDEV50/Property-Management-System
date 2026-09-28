@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/owner")
 @RequiredArgsConstructor
@@ -101,5 +103,25 @@ public class OwnerController {
         ownerService.deleteOwner(ownerId);
 
         return ResponseEntity.status(200).body(new ApiResponse("Owner Delete Successful"));
+    }
+
+    // Search owners by office ID
+    @GetMapping("/office/{officeId}")
+    public ResponseEntity<?> searchByOfficeId(@PathVariable Long officeId) {
+
+        // Get owners from service
+        List<Owner> owners = ownerService.searchByOfficeId(officeId);
+
+        return ResponseEntity.status(200).body(owners);
+    }
+
+    // Search owners by owner type
+    @GetMapping("/type/{ownerType}")
+    public ResponseEntity<?> searchByOwnerType(@PathVariable String ownerType) {
+
+        // Get owners from service
+        List<Owner> owners = ownerService.searchByOwnerType(ownerType);
+
+        return ResponseEntity.status(200).body(owners);
     }
 }
