@@ -6,10 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class SubscriptionService {
 
@@ -62,6 +62,62 @@ public class SubscriptionService {
         }
 
         subscriptionRepository.delete(oldSubscription);
+        return true;
+    }
+
+    // Search subscriptions by status
+    public List<Subscription> searchByStatus(String status) {
+
+        // Call repository query
+        return subscriptionRepository.findByStatus(status);
+    }
+
+    //..
+    // Change subscription plan
+    public boolean changeSubscriptionPlan(Long subscriptionId, String plan, Double price) {
+
+        // Get subscription by ID
+        Subscription subscription = subscriptionRepository.findById(subscriptionId).orElse(null);
+
+        // Check if subscription exists
+        if (subscription == null) {
+            return false;
+        }
+
+        // Change subscription plan
+        subscription.setPlan(plan);
+
+        // Change subscription price
+        subscription.setPrice(price);
+
+        // Save updated subscription
+        subscriptionRepository.save(subscription);
+
+        return true;
+    }
+
+    //..
+    // Renew subscription
+    public boolean renewSubscription(Long subscriptionId, LocalDate newEndDate) {
+
+        // Get subscription by ID
+        Subscription subscription =
+                subscriptionRepository.findById(subscriptionId).orElse(null);
+
+        // Check if subscription exists
+        if (subscription == null) {
+            return false;
+        }
+
+        // Change subscription end date
+        subscription.setEndDate(newEndDate);
+
+        // Change subscription status to ACTIVE
+        subscription.setStatus("ACTIVE");
+
+        // Save updated subscription
+        subscriptionRepository.save(subscription);
+
         return true;
     }
 }

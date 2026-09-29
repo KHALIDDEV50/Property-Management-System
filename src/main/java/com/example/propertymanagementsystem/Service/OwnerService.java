@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class OwnerService {
 
@@ -81,5 +80,19 @@ public class OwnerService {
         }
 
         return false;
+    }
+
+    // Search owners by office ID
+    public List<Owner> searchByOfficeId(Long officeId) {
+
+        // Call repository query
+        return ownerRepository.findByOfficeId(officeId);
+    }
+
+    // Search owners by owner type
+    public List<Owner> searchByOwnerType(String ownerType) {
+
+        // Call repository query
+        return ownerRepository.findByOwnerType(ownerType);
     }
 }

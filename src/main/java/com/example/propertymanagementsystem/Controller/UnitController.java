@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/unit")
 @RequiredArgsConstructor
@@ -95,5 +97,74 @@ public class UnitController {
         unitService.deleteUnit(unitId);
 
         return ResponseEntity.status(200).body(new ApiResponse("Unit Delete Successful"));
+    }
+
+    // Search units by property ID
+    @GetMapping("/property/{propertyId}")
+    public ResponseEntity<?> searchByPropertyId(@PathVariable Long propertyId) {
+
+        // Get units from service
+        List<Unit> units = unitService.searchByPropertyId(propertyId);
+
+        return ResponseEntity.status(200).body(units);
+    }
+
+    // Search units by status
+    @GetMapping("/status/{status}")
+    public ResponseEntity<?> searchByStatus(@PathVariable String status) {
+
+        // Get units from service
+        List<Unit> units = unitService.searchByStatus(status);
+
+        return ResponseEntity.status(200).body(units);
+    }
+
+    // Get all available units
+    @GetMapping("/available")
+    public ResponseEntity<?> getAvailableUnits() {
+
+        // Get available units from service
+        List<Unit> units = unitService.getAvailableUnits();
+
+        return ResponseEntity.status(200).body(units);
+    }
+
+    // Get all occupied units
+    @GetMapping("/occupied")
+    public ResponseEntity<?> getOccupiedUnits() {
+
+        // Get occupied units from service
+        List<Unit> units = unitService.getOccupiedUnits();
+
+        return ResponseEntity.status(200).body(units);
+    }
+
+    // Get available units by type
+    @GetMapping("/available/type/{unitType}")
+    public ResponseEntity<?> getAvailableUnitsByType(@PathVariable String unitType) {
+
+        // Get available units by type from service
+        List<Unit> units = unitService.getAvailableUnitsByType(unitType);
+
+        return ResponseEntity.status(200).body(units);
+    }
+
+    // Change unit status
+    @PutMapping("/status/{unitId}/{status}")
+    public ResponseEntity<?> changeUnitStatus(
+            @PathVariable Long unitId,
+            @PathVariable String status) {
+
+        // Change unit status
+        boolean isUpdated = unitService.changeUnitStatus(unitId, status);
+
+        // Check if unit exists
+        if (!isUpdated) {
+            return ResponseEntity.status(404)
+                    .body(new ApiResponse("Unit not found"));
+        }
+
+        return ResponseEntity.status(200)
+                .body(new ApiResponse("Unit status updated successfully"));
     }
 }

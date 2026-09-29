@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/tenant")
 @RequiredArgsConstructor
@@ -103,5 +105,25 @@ public class TenantController {
         tenantService.deleteTenant(tenantId);
 
         return ResponseEntity.status(200).body(new ApiResponse("Tenant Delete Successful"));
+    }
+
+    // Search tenants by city
+    @GetMapping("/city/{city}")
+    public ResponseEntity<?> searchByCity(@PathVariable String city) {
+
+        // Get tenants from service
+        List<Tenant> tenants = tenantService.searchByCity(city);
+
+        return ResponseEntity.status(200).body(tenants);
+    }
+
+    // Search tenants by tenant type
+    @GetMapping("/type/{tenantType}")
+    public ResponseEntity<?> searchByTenantType(@PathVariable String tenantType) {
+
+        // Get tenants from service
+        List<Tenant> tenants = tenantService.searchByTenantType(tenantType);
+
+        return ResponseEntity.status(200).body(tenants);
     }
 }
